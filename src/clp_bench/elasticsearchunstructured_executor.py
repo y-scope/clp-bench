@@ -83,7 +83,7 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
                 )
                 logger.info(
                     "File size before compression: "
-                    f'{self.benchmarking_results[mode].decompressed_size}'
+                    f"{self.benchmarking_results[mode].decompressed_size}"
                 )
             else:
                 logger.error("Cannot get decompressed metric")
@@ -93,7 +93,7 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
                 )
                 logger.info(
                     f"File size after compression: "
-                    f'{self.benchmarking_results[mode].compressed_size}'
+                    f"{self.benchmarking_results[mode].compressed_size}"
                 )
             else:
                 logger.error("Cannot get compressed metric")
@@ -103,9 +103,7 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
             else:
                 logger.error("Cannot get compression ratio metric")
             if ingest_e2e_match:
-                self.benchmarking_results[mode].ingest_e2e_latency = (
-                    f"{ingest_e2e_match.group(1)}s"
-                )
+                self.benchmarking_results[mode].ingest_e2e_latency = f"{ingest_e2e_match.group(1)}s"
                 logger.info(
                     f"Elasticsearch compressed data in {dataset_path} "
                     f"successfully in {ingest_e2e_match.group(1)} seconds"
@@ -155,7 +153,6 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
             )
         except subprocess.CalledProcessError as e:
             raise Exception(f"Elasticsearch failed to terminate: {e}")
-        
 
     def _acquire_system_metric_sample(self, metric: BenchmarkingSystemMetric) -> int:
         container_id = self.config["elasticsearch"]["container_id"]

@@ -129,11 +129,11 @@ class CPTExecutorBase(ABC):
                     f"Clearing existing stuff in {directory_path} in container {container_id}"
                 )
                 try:
-                    # Note to myself: when running the command manually in a shell, the wildcard 
-                    # (*) is expanded by the shell to match files in the directory. However, when 
-                    # you run it through `subprocess.run`, there is no shell involved by default, 
-                    # so the wildcard (*) isn’t expanded and remains a literal *, which won’t 
-                    # work as expected. So the solution is to use `bash -c` to enable wildcard 
+                    # Note to myself: when running the command manually in a shell, the wildcard
+                    # (*) is expanded by the shell to match files in the directory. However, when
+                    # you run it through `subprocess.run`, there is no shell involved by default,
+                    # so the wildcard (*) isn’t expanded and remains a literal *, which won’t
+                    # work as expected. So the solution is to use `bash -c` to enable wildcard
                     # expansion.
                     subprocess.run(
                         [
@@ -252,12 +252,10 @@ class CPTExecutorBase(ABC):
                 )
             if result.compressed_size:
                 logger.info(
-                    f"{mode.value.capitalize()} mode: "
-                    f"compressed size {result.compressed_size}"
+                    f"{mode.value.capitalize()} mode: " f"compressed size {result.compressed_size}"
                 )
             if result.ratio:
-                logger.info(f"{mode.value.capitalize()} mode: "
-                            f"compression ratio {result.ratio}")
+                logger.info(f"{mode.value.capitalize()} mode: " f"compression ratio {result.ratio}")
             if result.ingest_e2e_latency:
                 logger.info(
                     f"{mode.value.capitalize()} mode: "

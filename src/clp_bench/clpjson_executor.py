@@ -63,8 +63,11 @@ class CPTExecutorCLPJson(CPTExecutorBase):
             start_ts = time.perf_counter_ns()
             result = subprocess.run(
                 f"docker exec {container_id} {compress_script_path} "
-                f"--timestamp-key 't.$date' {dataset_path}", 
-                stderr=subprocess.PIPE, shell=True, check=True, text=True
+                f"--timestamp-key 't.$date' {dataset_path}",
+                stderr=subprocess.PIPE,
+                shell=True,
+                check=True,
+                text=True,
             )
             end_ts = time.perf_counter_ns()
             elapsed_time = (end_ts - start_ts) / 1e9

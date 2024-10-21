@@ -77,7 +77,7 @@ def query_only_run_benchmark(executor: CPTExecutorBase):
         executor.start_polling_system_metric(
             BenchmarkingSystemMetric.MEMORY, BenchmarkingMode.QUERY_ONLY_RUN_MODE
         )
-        # Query-only run mode no need to deploy, it assumes just finished 
+        # Query-only run mode no need to deploy, it assumes just finished
         # a hot-run or cold-run benchmarking.
         executor.launch(BenchmarkingMode.QUERY_ONLY_RUN_MODE)
         executor.run_query_benchmark(BenchmarkingMode.QUERY_ONLY_RUN_MODE)
@@ -92,9 +92,7 @@ def query_only_run_benchmark(executor: CPTExecutorBase):
 def main():
     description = "CLP Bench--An out-of-the-box benchmarking framework."
     # Command line arguments parsing
-    parser = argparse.ArgumentParser(
-        description=description
-    )
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
         "-t",
         "--target",
@@ -124,12 +122,7 @@ def main():
         default="all",
         help="The benchmarking mode",
     )
-    parser.add_argument(
-        '-v',
-        '--version',
-        action='version',
-        version=f'{VERSION}'
-    )
+    parser.add_argument("-v", "--version", action="version", version=f"{VERSION}")
     args = parser.parse_args()
     logger.info(f"Target tool is {args.target}")
     logger.info(f"The config file location: {args.config}")

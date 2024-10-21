@@ -29,7 +29,7 @@ class CPTExecutorGrafanaLoki(CPTExecutorBase):
         # You could query the current compression size by:
         # curl -G http://localhost:3100/metrics | grep 'loki_chunk_store_stored_chunk_bytes_total'
         # You could query the ingestion time by:
-        # curl -G http://localhost:3100/metrics | grep \ 
+        # curl -G http://localhost:3100/metrics | grep \
         # 'loki_request_duration_seconds_sum{method="POST",route="loki_api_v1_push"'
         pass
 
