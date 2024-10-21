@@ -17,7 +17,7 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
         super().__init__(config_path)
         # We read memory info directly from elasticsearch's API, there is no need to use baseline
         for mode in BenchmarkingMode:
-            self.benchmarking_reseults[mode].system_metric_results[
+            self.benchmarking_results[mode].system_metric_results[
                 BenchmarkingSystemMetric.MEMORY
             ].result_baseline = -1
 
@@ -29,8 +29,8 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
         logger.info(f"Elasticsearch launch script location: {launch_script_path}")
         compress_script_path = self.config["elasticsearch"]["compress_script_path"]
         logger.info(f"Elasticsearch compress script location: {compress_script_path}")
-        serach_script_path = self.config["elasticsearch"]["search_script_path"]
-        logger.info(f"Elasticsearch search script location: {serach_script_path}")
+        search_script_path = self.config["elasticsearch"]["search_script_path"]
+        logger.info(f"Elasticsearch search script location: {search_script_path}")
         terminate_script_path = self.config["elasticsearch"]["terminate_script_path"]
         logger.info(f"Elasticsearch terminate script location: {terminate_script_path}")
         data_path = self.config["elasticsearch"]["data_path"]
@@ -42,7 +42,7 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
 
         self._check_file_in_docker(container_id, launch_script_path)
         self._check_file_in_docker(container_id, compress_script_path)
-        self._check_file_in_docker(container_id, serach_script_path)
+        self._check_file_in_docker(container_id, search_script_path)
         self._check_file_in_docker(container_id, terminate_script_path)
         self._check_directory_in_docker(
             container_id, data_path, need_to_create=False, need_to_clear=True
@@ -78,34 +78,37 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
             ratio_match = re.search(r"Compression ratio for \S+ is (\d+\.\d+)", output)
             ingest_e2e_match = re.search(r"Ingestion time for \S+ is (\d+\.\d+) s", output)
             if decompressed_size_match:
-                self.benchmarking_reseults[mode].decompressed_size = (
+                self.benchmarking_results[mode].decompressed_size = (
                     f"{int(decompressed_size_match.group(1)) / 1024 / 1024}MB"
                 )
                 logger.info(
-                    f"File size before compression: {self.benchmarking_reseults[mode].decompressed_size}"
+                    "File size before compression: "
+                    f'{self.benchmarking_results[mode].decompressed_size}'
                 )
             else:
                 logger.error("Cannot get decompressed metric")
             if compressed_size_match:
-                self.benchmarking_reseults[mode].compressed_size = (
+                self.benchmarking_results[mode].compressed_size = (
                     f"{int(compressed_size_match.group(1)) / 1024 / 1024}MB"
                 )
                 logger.info(
-                    f"File size after compression: {self.benchmarking_reseults[mode].compressed_size}"
+                    f"File size after compression: "
+                    f'{self.benchmarking_results[mode].compressed_size}'
                 )
             else:
                 logger.error("Cannot get compressed metric")
             if ratio_match:
-                self.benchmarking_reseults[mode].ratio = f"{ratio_match.group(1)}x"
-                logger.info(f"Compression ratio: {self.benchmarking_reseults[mode].ratio}")
+                self.benchmarking_results[mode].ratio = f"{ratio_match.group(1)}x"
+                logger.info(f"Compression ratio: {self.benchmarking_results[mode].ratio}")
             else:
                 logger.error("Cannot get compression ratio metric")
             if ingest_e2e_match:
-                self.benchmarking_reseults[mode].ingest_e2e_latency = (
+                self.benchmarking_results[mode].ingest_e2e_latency = (
                     f"{ingest_e2e_match.group(1)}s"
                 )
                 logger.info(
-                    f"Elasticsearch compressed data in {dataset_path} successfully in {ingest_e2e_match.group(1)} seconds"
+                    f"Elasticsearch compressed data in {dataset_path} "
+                    f"successfully in {ingest_e2e_match.group(1)} seconds"
                 )
             else:
                 logger.error("Cannot get ingest end-to-end latency metric")
@@ -152,28 +155,7 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
             )
         except subprocess.CalledProcessError as e:
             raise Exception(f"Elasticsearch failed to terminate: {e}")
-
-    # def _acquire_system_metric_sample(self, metric: BenchmarkingSystemMetric) -> int:
-    #     if BenchmarkingSystemMetric.MEMORY == metric:
-    #         container_id = self.config['elasticsearch']['container_id']
-    #         memory_polling_script_path = self.config['elasticsearch']['memory_polling_script_path']
-    #         metric_sample = -1
-    #         # In poll_mem.py, when there is an exception, it will print -1
-    #         while (-1 == metric_sample):
-    #             result = subprocess.run(
-    #                 ['docker', 'exec', container_id, 'python3', memory_polling_script_path],
-    #                 stdout=subprocess.PIPE,
-    #                 check=True
-    #             )
-    #             metric_sample = int(result.stdout.decode('utf-8').strip()) / 1024
-    #             if -1 == metric_sample:
-    #                 time.sleep(1)
-    #     elif BenchmarkingSystemMetric.CPU == metric:
-    #         metric_sample = 0
-    #         # TODO
-    #     else:
-    #         raise Exception(f"Unknow metric: {metric.value[0]}")
-    #     return metric_sample
+        
 
     def _acquire_system_metric_sample(self, metric: BenchmarkingSystemMetric) -> int:
         container_id = self.config["elasticsearch"]["container_id"]

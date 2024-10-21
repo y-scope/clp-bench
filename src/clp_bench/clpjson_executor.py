@@ -18,7 +18,7 @@ class CPTExecutorCLPJson(CPTExecutorBase):
         super().__init__(config_path)
         # We read memory info directly from elasticsearch's API, there is no need to use baseline
         for mode in BenchmarkingMode:
-            self.benchmarking_reseults[mode].system_metric_results[
+            self.benchmarking_results[mode].system_metric_results[
                 BenchmarkingSystemMetric.MEMORY
             ].result_baseline = -1
 
@@ -61,22 +61,24 @@ class CPTExecutorCLPJson(CPTExecutorBase):
         dataset_path = self.config["clp_json"]["dataset_path"]
         try:
             start_ts = time.perf_counter_ns()
-            command = f"docker exec {container_id} {compress_script_path} --timestamp-key 't.$date' {dataset_path}"
             result = subprocess.run(
-                command, stderr=subprocess.PIPE, shell=True, check=True, text=True
+                f"docker exec {container_id} {compress_script_path} "
+                f"--timestamp-key 't.$date' {dataset_path}", 
+                stderr=subprocess.PIPE, shell=True, check=True, text=True
             )
             end_ts = time.perf_counter_ns()
             elapsed_time = (end_ts - start_ts) / 1e9
             logger.info(
-                f"clp-json compressed data in {dataset_path} successfully in {elapsed_time:.9f} seconds"
+                f"clp-json compressed data in {dataset_path} successfully "
+                f"in {elapsed_time:.9f} seconds"
             )
-            self.benchmarking_reseults[mode].ingest_e2e_latency = f"{elapsed_time:.9f}s"
+            self.benchmarking_results[mode].ingest_e2e_latency = f"{elapsed_time:.9f}s"
             output = result.stderr
             match = re.search(r"Compressed (\S+).*?into (\S+).*?\((\d+\.\d+x)\)", output)
             if match:
-                self.benchmarking_reseults[mode].decompressed_size = match.group(1)
-                self.benchmarking_reseults[mode].compressed_size = match.group(2)
-                self.benchmarking_reseults[mode].ratio = match.group(3)
+                self.benchmarking_results[mode].decompressed_size = match.group(1)
+                self.benchmarking_results[mode].compressed_size = match.group(2)
+                self.benchmarking_results[mode].ratio = match.group(3)
                 logger.info("Ingest metrics collected")
             else:
                 logger.error("Cannot get ingest metrics")

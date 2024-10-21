@@ -17,7 +17,7 @@ class CPTExecutorElasticsearch(CPTExecutorBase):
         super().__init__(config_path)
         # We read memory info directly from elasticsearch's API, there is no need to use baseline
         for mode in BenchmarkingMode:
-            self.benchmarking_reseults[mode].system_metric_results[
+            self.benchmarking_results[mode].system_metric_results[
                 BenchmarkingSystemMetric.MEMORY
             ].result_baseline = -1
 
@@ -78,34 +78,37 @@ class CPTExecutorElasticsearch(CPTExecutorBase):
             ratio_match = re.search(r"Compression ratio for \S+ is (\d+\.\d+)", output)
             ingest_e2e_match = re.search(r"Ingestion time for \S+ is (\d+\.\d+) s", output)
             if decompressed_size_match:
-                self.benchmarking_reseults[mode].decompressed_size = (
+                self.benchmarking_results[mode].decompressed_size = (
                     f"{int(decompressed_size_match.group(1)) / 1024 / 1024}MB"
                 )
                 logger.info(
-                    f"File size before compression: {self.benchmarking_reseults[mode].decompressed_size}"
+                    "File size before compression: "
+                    f'{self.benchmarking_results[mode].decompressed_size}'
                 )
             else:
                 logger.error("Cannot get decompressed metric")
             if compressed_size_match:
-                self.benchmarking_reseults[mode].compressed_size = (
+                self.benchmarking_results[mode].compressed_size = (
                     f"{int(compressed_size_match.group(1)) / 1024 / 1024}MB"
                 )
                 logger.info(
-                    f"File size after compression: {self.benchmarking_reseults[mode].compressed_size}"
+                    "File size after compression: "
+                    f'{self.benchmarking_results[mode].compressed_size}'
                 )
             else:
                 logger.error("Cannot get compressed metric")
             if ratio_match:
-                self.benchmarking_reseults[mode].ratio = f"{ratio_match.group(1)}x"
-                logger.info(f"Compression ratio: {self.benchmarking_reseults[mode].ratio}")
+                self.benchmarking_results[mode].ratio = f"{ratio_match.group(1)}x"
+                logger.info(f"Compression ratio: {self.benchmarking_results[mode].ratio}")
             else:
                 logger.error("Cannot get compression ratio metric")
             if ingest_e2e_match:
-                self.benchmarking_reseults[mode].ingest_e2e_latency = (
+                self.benchmarking_results[mode].ingest_e2e_latency = (
                     f"{ingest_e2e_match.group(1)}s"
                 )
                 logger.info(
-                    f"Elasticsearch compressed data in {dataset_path} successfully in {ingest_e2e_match.group(1)} seconds"
+                    f"Elasticsearch compressed data in {dataset_path} "
+                    f"successfully in {ingest_e2e_match.group(1)} seconds"
                 )
             else:
                 logger.error("Cannot get ingest end-to-end latency metric")
@@ -153,27 +156,6 @@ class CPTExecutorElasticsearch(CPTExecutorBase):
         except subprocess.CalledProcessError as e:
             raise Exception(f"Elasticsearch failed to terminate: {e}")
 
-    # def _acquire_system_metric_sample(self, metric: BenchmarkingSystemMetric) -> int:
-    #     if BenchmarkingSystemMetric.MEMORY == metric:
-    #         container_id = self.config['elasticsearch']['container_id']
-    #         memory_polling_script_path = self.config['elasticsearch']['memory_polling_script_path']
-    #         metric_sample = -1
-    #         # In poll_mem.py, when there is an exception, it will print -1
-    #         while (-1 == metric_sample):
-    #             result = subprocess.run(
-    #                 ['docker', 'exec', container_id, 'python3', memory_polling_script_path],
-    #                 stdout=subprocess.PIPE,
-    #                 check=True
-    #             )
-    #             metric_sample = int(result.stdout.decode('utf-8').strip()) / 1024
-    #             if -1 == metric_sample:
-    #                 time.sleep(1)
-    #     elif BenchmarkingSystemMetric.CPU == metric:
-    #         metric_sample = 0
-    #         # TODO
-    #     else:
-    #         raise Exception(f"Unknow metric: {metric.value[0]}")
-    #     return metric_sample
 
     def _acquire_system_metric_sample(self, metric: BenchmarkingSystemMetric) -> int:
         container_id = self.config["elasticsearch"]["container_id"]

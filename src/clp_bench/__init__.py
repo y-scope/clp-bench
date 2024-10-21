@@ -4,7 +4,7 @@ import logging
 import traceback
 
 from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
-from .version import VERSION, VERSION_SHORT
+from .version import VERSION
 
 # Setup logging
 # Create logger
@@ -77,7 +77,8 @@ def query_only_run_benchmark(executor: CPTExecutorBase):
         executor.start_polling_system_metric(
             BenchmarkingSystemMetric.MEMORY, BenchmarkingMode.QUERY_ONLY_RUN_MODE
         )
-        # Query-only run mode no need to deploy, it assumes just finished a hot-run or cold-run benchmarking.
+        # Query-only run mode no need to deploy, it assumes just finished 
+        # a hot-run or cold-run benchmarking.
         executor.launch(BenchmarkingMode.QUERY_ONLY_RUN_MODE)
         executor.run_query_benchmark(BenchmarkingMode.QUERY_ONLY_RUN_MODE)
     except Exception as e:
@@ -89,9 +90,10 @@ def query_only_run_benchmark(executor: CPTExecutorBase):
 
 
 def main():
+    description = "CLP Bench--An out-of-the-box benchmarking framework."
     # Command line arguments parsing
     parser = argparse.ArgumentParser(
-        description="CLP Bench--An out-of-the-box benchmarking framework."
+        description=description
     )
     parser.add_argument(
         "-t",
@@ -121,6 +123,12 @@ def main():
         choices=["all", "hot", "cold", "query-only"],
         default="all",
         help="The benchmarking mode",
+    )
+    parser.add_argument(
+        '-v',
+        '--version',
+        action='version',
+        version=f'{VERSION}'
     )
     args = parser.parse_args()
     logger.info(f"Target tool is {args.target}")
