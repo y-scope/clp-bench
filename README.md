@@ -2,9 +2,6 @@
 clp-bench is a tool for benchmarking [CLP] as well as other log management tools. The tool itself is
 a Python package and we also provide a [web interface][ui] for viewing results.
 
-[CLP]: https://github.com/y-scope/clp
-[ui]: ui
-
 ## Requirements
 
 * Docker
@@ -19,3 +16,6 @@ pip install -e .
 ```
 
 You can use `clp-bench --help` to see usage instructions.
+
+[CLP]: https://github.com/y-scope/clp
+[ui]: ui
