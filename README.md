@@ -1,6 +1,8 @@
 # clp-bench
 clp-bench is a tool for benchmarking [CLP] as well as other log management tools. The tool itself is
-a Python package and we also provide a [web interface][ui] for viewing results.
+a Python package, and we also provide a [web interface][ui] for viewing results.
+
+The methodology for the benchmarks is described [here](docs/methodology.md).
 
 ## Requirements
 
