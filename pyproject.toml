@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools >= 61.0", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clp_bench"
+version = "0.1.0"
+license = {file = "LICENSE"}
+authors = [
+    { name="Xiaochong Wei", email="xiaochong.wei@yscope.com" },
+]
+description = "Framework for benchmarking CLP against other tools"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "pyyaml",
+    "python-dateutil"
+]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+]
+
+[project.scripts]
+clp-bench = "clp_bench:main"
+
+[project.optional-dependencies]
+dev = [
+    "black >= 24.4.0",
+    "build >= 0.8.0",
+    "docformatter >= 1.7.5",
+    "mypy >= 1.9.0",
+    "ruff >= 0.3.7",
+    "types-python-dateutil >= 2.8.19.2",
+]
+test = [
+    "smart_open == 6.4.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/y-scope/clp-bench"
+"Bug Tracker" = "https://github.com/y-scope/clp-bench/issues"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+color = true
+preview = true
+
+[tool.docformatter]
+make-summary-multi-line = true
+pre-summary-newline = true
+recursive = true
+wrap-summaries = 80
+wrap-descriptions = 80
+
+[tool.mypy]
+strict = true
+pretty = true
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+isort.order-by-type = false
+select = ["E", "I", "F"]
+
+[tool.setuptools_scm]

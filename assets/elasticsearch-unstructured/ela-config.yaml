@@ -1,0 +1,30 @@
+system_metric:
+  enable: True
+  memory:
+    ingest_polling_interval: 10
+    run_query_benchmark_polling_interval: 5
+
+elasticsearch:
+  container_id: elasticsearch-xiaochong
+  launch_script_path: /home/assets/start-ela.sh
+  compress_script_path: /home/assets/compress.py
+  search_script_path: /home/assets/query.py
+  terminate_script_path: /home/assets/stop-ela.sh
+  memory_polling_script_path: /home/assets/poll_mem.py
+  data_path: /var/lib/elasticsearch
+  log_path: /var/log/elasticsearch
+  dataset_path: /home/datasets/worker*/worker*/*log*
+  queries:
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " org.apache.hadoop.hdfs.server.common.Storage: Analyzing storage directories for bpid "}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " org.apache.hadoop.hdfs.server.datanode.DataNode: DataTransfer, at "}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " INFO org.apache.hadoop.yarn.server.nodemanager.containermanager.container.ContainerImpl: Container "}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " DEBUG org.apache.hadoop.mapred.ShuffleHandler: verifying request. enc_str="}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " to pid 21177 as user "}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " 10000 reply: "}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " 10 reply: "}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " 178.2 MB "}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " 1.9 GB "}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": "job_1528179349176_24837"}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": "blk_1075089282_1348458"}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": "hdfs://master:8200/HiBench/Bayes/temp/worddict"}}}}, "size": 10000}'
+    - '{"query": {"bool": {"must": {"match_phrase": {"log_line": " abcde "}}}}, "size": 10000}'
