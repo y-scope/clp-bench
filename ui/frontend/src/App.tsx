@@ -514,7 +514,7 @@ function App() {
                     },
                   }}
             >
-                <Link href='https://github.com/y-scope/clp-bench-prototype/blob/main/docs/methodology.md'>Methodology</Link>
+                <Link href='https://github.com/y-scope/clp-bench/blob/main/docs/methodology.md'>Methodology</Link>
                 <Divider orientation="vertical" flexItem />
                 <Link href='https://docs.yscope.com/clp/main/user-guide/core-unstructured/clp.html'>CLP Documentation</Link>
             </Box>
