@@ -1,0 +1,23 @@
+system_metric:
+  enable: True
+  memory:
+    ingest_polling_interval: 10
+    run_query_benchmark_polling_interval: 10
+
+elasticsearch:
+  container_id: elasticsearch-semi-xiaochong
+  launch_script_path: /home/assets/start-ela.sh
+  compress_script_path: /home/assets/compress.py
+  search_script_path: /home/assets/query.py
+  terminate_script_path: /home/assets/stop-ela.sh
+  memory_polling_script_path: /home/assets/poll_mem.py
+  data_path: /var/lib/elasticsearch
+  log_path: /var/log/elasticsearch
+  dataset_path: /home/datasets/mongod.log
+  queries:
+    - '{"query": {"exists": {"field": "attr.tickets"}}, "size": 10000}'
+    - '{"query": {"term": {"id": 22419}}, "size": 10000}'
+    - '{"query": {"bool": {"must": [{"wildcard": {"attr.message.msg": "log_release*"}}, {"match": {"attr.message.session_name": "connection"}}]}}, "size": 10000}'
+    - '{"query": {"bool": {"must": [{"match": {"ctx": "initandlisten"}}], "should": [{"wildcard": {"attr.message.msg": "log_remove*"}}, {"bool": {"must_not": [{"match_phrase": {"msg": "WiredTiger message"}}]}}], "minimum_should_match": 1}}, "size": 10000}'
+    - '{"query": {"bool": {"must": [{"match": {"c": "WTWRTLOG"}}, {"range": {"attr.message.ts_sec": {"gt": 1679490000}}}]}}, "size": 10000}'
+    - '{"query": {"bool": {"must": [{"match": {"ctx": "FlowControlRefresher"}}, {"match": {"attr.numTrimmed": 0}}]}}, "size": 10000}'
