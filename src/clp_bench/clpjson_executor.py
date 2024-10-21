@@ -1,9 +1,9 @@
-from .executor import BenchmarkingSystemMetric, BenchmarkingMode, CPTExecutorBase
-import time
 import logging
-import subprocess
 import re
+import subprocess
+import time
 
+from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
 # Retrive logger
 logger = logging.getLogger(__name__)
@@ -77,7 +77,7 @@ class CPTExecutorCLPJson(CPTExecutorBase):
                 self.benchmarking_reseults[mode].decompressed_size = match.group(1)
                 self.benchmarking_reseults[mode].compressed_size = match.group(2)
                 self.benchmarking_reseults[mode].ratio = match.group(3)
-                logger.info(f"Ingest metrics collected")
+                logger.info("Ingest metrics collected")
             else:
                 logger.error("Cannot get ingest metrics")
         except subprocess.CalledProcessError as e:

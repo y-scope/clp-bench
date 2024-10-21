@@ -1,9 +1,8 @@
-from .executor import BenchmarkingSystemMetric, BenchmarkingMode, CPTExecutorBase
 import logging
-import time
-import subprocess
 import re
+import subprocess
 
+from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
 # Retrive logger
 logger = logging.getLogger(__name__)
@@ -187,5 +186,5 @@ class CPTExecutorElasticsearch(CPTExecutorBase):
                 if "/usr/share/elasticsearch" in line:
                     metric += int(line.strip().split()[5])
             return metric
-        except subprocess.CalledProcessError as e:
-            raise Exception(f"Elasticsearch failed to get mem usage info")
+        except subprocess.CalledProcessError:
+            raise Exception("Elasticsearch failed to get mem usage info")

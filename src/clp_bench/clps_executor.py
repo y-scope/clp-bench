@@ -1,8 +1,8 @@
-from .executor import BenchmarkingSystemMetric, BenchmarkingMode, CPTExecutorBase
 import logging
 import subprocess
 import time
 
+from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
 # Retrive logger
 logger = logging.getLogger(__name__)
@@ -109,5 +109,5 @@ class CPTExecutorCLPS(CPTExecutorBase):
                 if binary_path in line and data_path in line:
                     return int(line.strip().split()[5])
             return 0
-        except subprocess.CalledProcessError as e:
-            raise Exception(f"clp-s failed to get mem usage info")
+        except subprocess.CalledProcessError:
+            raise Exception("clp-s failed to get mem usage info")

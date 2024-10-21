@@ -1,9 +1,10 @@
-from .version import VERSION, VERSION_SHORT
-from .executor import BenchmarkingSystemMetric, BenchmarkingMode, CPTExecutorBase
 import argparse
 import importlib
 import logging
 import traceback
+
+from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
+from .version import VERSION, VERSION_SHORT
 
 # Setup logging
 # Create logger

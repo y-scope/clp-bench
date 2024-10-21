@@ -1,10 +1,11 @@
-from .executor import BenchmarkingMode, CPTExecutorBase
-from dateutil import parser
-from datetime import timedelta
 import logging
-import time
 import subprocess
+import time
+from datetime import timedelta
 
+from dateutil import parser
+
+from .executor import BenchmarkingMode, CPTExecutorBase
 
 # Retrive logger
 logger = logging.getLogger(__name__)

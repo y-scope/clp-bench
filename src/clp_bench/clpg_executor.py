@@ -1,8 +1,8 @@
-from .executor import BenchmarkingSystemMetric, BenchmarkingMode, CPTExecutorBase
 import logging
 import subprocess
 import time
 
+from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
 # Retrive logger
 logger = logging.getLogger(__name__)
@@ -114,5 +114,5 @@ class CPTExecutorCLPG(CPTExecutorBase):
             for line in output:
                 if container_id in line:
                     return self._get_mem_usage_from_docker_stats(line)
-        except subprocess.CalledProcessError as e:
-            raise Exception(f"clp failed to get mem usage info")
+        except subprocess.CalledProcessError:
+            raise Exception("clp failed to get mem usage info")

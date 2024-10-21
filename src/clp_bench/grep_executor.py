@@ -1,6 +1,6 @@
-from .executor import BenchmarkingSystemMetric, BenchmarkingMode, CPTExecutorBase
 import logging
 
+from .executor import BenchmarkingMode, CPTExecutorBase
 
 # Retrive logger
 logger = logging.getLogger(__name__)

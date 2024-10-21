@@ -1,13 +1,13 @@
+import logging
+import statistics
+import subprocess
+import threading
+import time
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Dict, List
-import logging
-import subprocess
-import yaml
-import threading
-import statistics
-import time
 
+import yaml
 
 # Retrive logger
 logger = logging.getLogger(__name__)
