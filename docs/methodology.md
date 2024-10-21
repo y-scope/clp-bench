@@ -70,7 +70,8 @@ We test two possible runtime scenarios for each tool:
 ## Metrics collected
 ### Ingest time
 This measures the time taken to ingest the data. Smaller values are better indicating faster
-ingestion performance.
+ingestion performance. The ingest speed is calculated by dividing the on-disk size of the 
+pre-ingestion data by the ingestion time.
 
 ### Compressed size
 This measures the on-disk size of the data, post-ingestion, in the tool being tested. We measure it
