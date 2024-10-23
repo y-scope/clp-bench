@@ -7,7 +7,7 @@ from dateutil import parser
 
 from .executor import BenchmarkingMode, CPTExecutorBase
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 

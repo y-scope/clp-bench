@@ -4,7 +4,7 @@ import time
 
 from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 

@@ -9,7 +9,7 @@ from typing import Dict, List
 
 import yaml
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 
@@ -132,8 +132,8 @@ class CPTExecutorBase(ABC):
                     # Note to myself: when running the command manually in a shell, the wildcard
                     # (*) is expanded by the shell to match files in the directory. However, when
                     # you run it through `subprocess.run`, there is no shell involved by default,
-                    # so the wildcard (*) isn’t expanded and remains a literal *, which won’t
-                    # work as expected. So the solution is to use `bash -c` to enable wildcard
+                    # so the wildcard (*) isn’t expanded and remains a literal *, which won’t work
+                    # as expected. So the solution is to use `bash -c` to enable wildcard
                     # expansion.
                     subprocess.run(
                         [
@@ -147,8 +147,8 @@ class CPTExecutorBase(ABC):
                         check=True,
                     )
                     logger.info(
-                        f"All contents within {directory_path} cleared "
-                        f"successfully in container {container_id}"
+                        f"All contents within {directory_path} cleared successfully in container "
+                        f"{container_id}"
                     )
                 except subprocess.CalledProcessError as e:
                     raise Exception(
@@ -247,8 +247,8 @@ class CPTExecutorBase(ABC):
         for mode, result in self.benchmarking_results.items():
             if result.decompressed_size:
                 logger.info(
-                    f"{mode.value.capitalize()} mode: "
-                    f"decompressed size {result.decompressed_size}"
+                    f"{mode.value.capitalize()} mode: decompressed size "
+                    f"{result.decompressed_size}"
                 )
             if result.compressed_size:
                 logger.info(
@@ -258,13 +258,13 @@ class CPTExecutorBase(ABC):
                 logger.info(f"{mode.value.capitalize()} mode: " f"compression ratio {result.ratio}")
             if result.ingest_e2e_latency:
                 logger.info(
-                    f"{mode.value.capitalize()} mode: "
-                    f"ingest e2e latency {result.ingest_e2e_latency}"
+                    f"{mode.value.capitalize()} mode: ingest e2e latency "
+                    f"{result.ingest_e2e_latency}"
                 )
             for i in range(len(result.query_e2e_latencies)):
                 logger.info(
-                    f"{mode.value.capitalize()} mode: "
-                    f"No.{i} query e2e latency {result.query_e2e_latencies[i]}"
+                    f"{mode.value.capitalize()} mode: No.{i} query e2e latency "
+                    f"{result.query_e2e_latencies[i]}"
                 )
 
             if self.config.get("system_metric", {}).get("enable", False):
@@ -294,8 +294,7 @@ class CPTExecutorBase(ABC):
                                     )
                                 )
                             logger.info(
-                                f"{mode.value.capitalize()} mode: "
-                                f"average {metric.value[0]} usage "
+                                f"{mode.value.capitalize()} mode: average {metric.value[0]} usage "
                                 f"at {stage.value} stage: {average_metric_result}{metric.value[1]}"
                             )
 
@@ -308,8 +307,8 @@ class CPTExecutorBase(ABC):
             )
             self.__system_metric_pollers[metric].stage_polling_intervals[stage] = interval
             logger.info(
-                f"{metric.value[0].capitalize()} usage polling "
-                f"interval for {stage.value}: {interval} seconds"
+                f"{metric.value[0].capitalize()} usage polling interval for {stage.value}: "
+                f"{interval} seconds"
             )
 
     def __record_system_metric_polling_sample(
@@ -322,8 +321,8 @@ class CPTExecutorBase(ABC):
                     stage
                 ].append(metric_sample)
                 logger.info(
-                    f"Current {metric.value[0]} usage at {stage.value} "
-                    f"stage: {metric_sample}{metric.value[1]}"
+                    f"Current {metric.value[0]} usage at {stage.value} stage: {metric_sample}"
+                    f"{metric.value[1]}"
                 )
                 self.__system_metric_pollers[metric].stage_alteration_notifier.wait(
                     self.__system_metric_pollers[metric].stage_polling_intervals[stage]
@@ -347,7 +346,7 @@ class CPTExecutorBase(ABC):
             metric_sample = 0
             # TODO
         else:
-            raise Exception(f"Unknow metric: {metric.value[0]}")
+            raise Exception(f"Unknown metric: {metric.value[0]}")
         return metric_sample
 
     def __poll_system_metrics(self, metric: BenchmarkingSystemMetric, mode: BenchmarkingMode):

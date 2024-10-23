@@ -4,7 +4,7 @@ import time
 
 from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 
@@ -55,8 +55,8 @@ class CPTExecutorCLPS(CPTExecutorBase):
             self.benchmarking_results[mode].decompressed_size = f"{decompressed_size_mb:.2f}MB"
             start_ts = time.perf_counter_ns()
             subprocess.run(
-                f"docker exec {container_id} {binary_path} c --timestamp-key "
-                f"'t.$date' --target-encoded-size 268435456 {data_path} {dataset_path}",
+                f"docker exec {container_id} {binary_path} c --timestamp-key 't.$date' "
+                f"--target-encoded-size 268435456 {data_path} {dataset_path}",
                 shell=True,
                 check=True,
             )

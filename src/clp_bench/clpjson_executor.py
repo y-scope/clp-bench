@@ -5,7 +5,7 @@ import time
 
 from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 
@@ -30,8 +30,8 @@ class CPTExecutorCLPJson(CPTExecutorBase):
         logger.info(f"clp-json launch script location: {launch_script_path}")
         compress_script_path = self.config["clp_json"]["compress_script_path"]
         logger.info(f"clp-json compress script location: {compress_script_path}")
-        serach_script_path = self.config["clp_json"]["search_script_path"]
-        logger.info(f"clp-json search script location: {serach_script_path}")
+        search_script_path = self.config["clp_json"]["search_script_path"]
+        logger.info(f"clp-json search script location: {search_script_path}")
         terminate_script_path = self.config["clp_json"]["terminate_script_path"]
         logger.info(f"clp-json terminate script location: {terminate_script_path}")
         data_path = self.config["clp_json"]["data_path"]
@@ -43,7 +43,7 @@ class CPTExecutorCLPJson(CPTExecutorBase):
 
         self._check_file_in_docker(container_id, launch_script_path)
         self._check_file_in_docker(container_id, compress_script_path)
-        self._check_file_in_docker(container_id, serach_script_path)
+        self._check_file_in_docker(container_id, search_script_path)
         self._check_file_in_docker(container_id, terminate_script_path)
         self._check_directory_in_docker(
             container_id, data_path, need_to_create=False, need_to_clear=True
@@ -62,8 +62,8 @@ class CPTExecutorCLPJson(CPTExecutorBase):
         try:
             start_ts = time.perf_counter_ns()
             result = subprocess.run(
-                f"docker exec {container_id} {compress_script_path} "
-                f"--timestamp-key 't.$date' {dataset_path}",
+                f"docker exec {container_id} {compress_script_path} --timestamp-key 't.$date' "
+                f"{dataset_path}",
                 stderr=subprocess.PIPE,
                 shell=True,
                 check=True,
@@ -72,8 +72,8 @@ class CPTExecutorCLPJson(CPTExecutorBase):
             end_ts = time.perf_counter_ns()
             elapsed_time = (end_ts - start_ts) / 1e9
             logger.info(
-                f"clp-json compressed data in {dataset_path} successfully "
-                f"in {elapsed_time:.9f} seconds"
+                f"clp-json compressed data in {dataset_path} successfully in {elapsed_time:.9f} "
+                f"seconds"
             )
             self.benchmarking_results[mode].ingest_e2e_latency = f"{elapsed_time:.9f}s"
             output = result.stderr

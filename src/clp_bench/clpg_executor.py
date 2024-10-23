@@ -4,7 +4,7 @@ import time
 
 from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 
@@ -62,7 +62,7 @@ class CPTExecutorCLPG(CPTExecutorBase):
             end_ts = time.perf_counter_ns()
             elapsed_time = (end_ts - start_ts) / 1e9
             self.benchmarking_results[mode].ingest_e2e_latency = f"{elapsed_time:.9f}s"
-            # FIXME: this is inconsistent with clp-s genereated archives permission
+            # FIXME: this is inconsistent with clp-s generated archives permission
             subprocess.run(
                 ["sudo", "find", data_path, "-exec", "chmod", "o+r+x", "{}", ";"], check=True
             )

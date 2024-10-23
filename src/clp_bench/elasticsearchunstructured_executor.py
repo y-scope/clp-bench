@@ -4,7 +4,7 @@ import subprocess
 
 from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 
@@ -105,8 +105,8 @@ class CPTExecutorElasticsearchUnstructured(CPTExecutorBase):
             if ingest_e2e_match:
                 self.benchmarking_results[mode].ingest_e2e_latency = f"{ingest_e2e_match.group(1)}s"
                 logger.info(
-                    f"Elasticsearch compressed data in {dataset_path} "
-                    f"successfully in {ingest_e2e_match.group(1)} seconds"
+                    f"Elasticsearch compressed data in {dataset_path} successfully in "
+                    f"{ingest_e2e_match.group(1)} seconds"
                 )
             else:
                 logger.error("Cannot get ingest end-to-end latency metric")

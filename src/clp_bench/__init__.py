@@ -77,8 +77,7 @@ def query_only_run_benchmark(executor: CPTExecutorBase):
         executor.start_polling_system_metric(
             BenchmarkingSystemMetric.MEMORY, BenchmarkingMode.QUERY_ONLY_RUN_MODE
         )
-        # Query-only run mode no need to deploy, it assumes just finished
-        # a hot-run or cold-run benchmarking.
+        # Query-only run mode has no deployment, it assumes finished ingestion.
         executor.launch(BenchmarkingMode.QUERY_ONLY_RUN_MODE)
         executor.run_query_benchmark(BenchmarkingMode.QUERY_ONLY_RUN_MODE)
     except Exception as e:
@@ -128,7 +127,7 @@ def main():
     logger.info(f"The config file location: {args.config}")
     logger.info(f"The benchmarking mode: {args.mode}")
 
-    # Load cooresponding implementation for executor's SPI
+    # Load corresponding implementation for executor's SPI
     try:
         executor = load_executor_class(args.target, args.config)
     except Exception as e:

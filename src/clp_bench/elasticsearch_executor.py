@@ -4,7 +4,7 @@ import subprocess
 
 from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 
@@ -29,8 +29,8 @@ class CPTExecutorElasticsearch(CPTExecutorBase):
         logger.info(f"Elasticsearch launch script location: {launch_script_path}")
         compress_script_path = self.config["elasticsearch"]["compress_script_path"]
         logger.info(f"Elasticsearch compress script location: {compress_script_path}")
-        serach_script_path = self.config["elasticsearch"]["search_script_path"]
-        logger.info(f"Elasticsearch search script location: {serach_script_path}")
+        search_script_path = self.config["elasticsearch"]["search_script_path"]
+        logger.info(f"Elasticsearch search script location: {search_script_path}")
         terminate_script_path = self.config["elasticsearch"]["terminate_script_path"]
         logger.info(f"Elasticsearch terminate script location: {terminate_script_path}")
         data_path = self.config["elasticsearch"]["data_path"]
@@ -42,7 +42,7 @@ class CPTExecutorElasticsearch(CPTExecutorBase):
 
         self._check_file_in_docker(container_id, launch_script_path)
         self._check_file_in_docker(container_id, compress_script_path)
-        self._check_file_in_docker(container_id, serach_script_path)
+        self._check_file_in_docker(container_id, search_script_path)
         self._check_file_in_docker(container_id, terminate_script_path)
         self._check_directory_in_docker(
             container_id, data_path, need_to_create=False, need_to_clear=True
@@ -105,8 +105,8 @@ class CPTExecutorElasticsearch(CPTExecutorBase):
             if ingest_e2e_match:
                 self.benchmarking_results[mode].ingest_e2e_latency = f"{ingest_e2e_match.group(1)}s"
                 logger.info(
-                    f"Elasticsearch compressed data in {dataset_path} "
-                    f"successfully in {ingest_e2e_match.group(1)} seconds"
+                    f"Elasticsearch compressed data in {dataset_path} successfully in "
+                    f"{ingest_e2e_match.group(1)} seconds"
                 )
             else:
                 logger.error("Cannot get ingest end-to-end latency metric")
