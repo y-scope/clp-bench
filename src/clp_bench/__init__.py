@@ -90,23 +90,25 @@ def query_only_run_benchmark(executor: CPTExecutorBase):
 
 def main():
     description = "CLP Bench--An out-of-the-box benchmarking framework."
+    unstructured_choices = [
+        "GrafanaLoki",
+        "CLPG",
+        "GLT",
+        "Grep",
+        "ElasticsearchUnstructured",
+    ]
+    semi_structured_choices = [
+        "CLPJson",
+        "CLPS",
+        "Elasticsearch",
+    ]
     # Command line arguments parsing
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
         "-t",
         "--target",
         type=str,
-        # The first line is for semi-structured; the second line is for unstructured
-        choices=[
-            "CLPJson",
-            "CLPS",
-            "Elasticsearch",
-            "GrafanaLoki",
-            "CLPG",
-            "GLT",
-            "Grep",
-            "ElasticsearchUnstructured",
-        ],
+        choices=unstructured_choices + semi_structured_choices,
         required=True,
         help="The target tool you want to benchmark",
     )

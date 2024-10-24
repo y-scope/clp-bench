@@ -2,7 +2,12 @@ import logging
 import re
 import subprocess
 
-from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
+from .executor import (
+    BenchmarkingMode,
+    BenchmarkingResult,
+    BenchmarkingSystemMetric,
+    CPTExecutorBase,
+)
 
 # Retrieve logger
 logger = logging.getLogger(__name__)
@@ -79,7 +84,7 @@ class CPTExecutorElasticsearch(CPTExecutorBase):
             ingest_e2e_match = re.search(r"Ingestion time for \S+ is (\d+\.\d+) s", output)
             if decompressed_size_match:
                 self.benchmarking_results[mode].decompressed_size = (
-                    f"{int(decompressed_size_match.group(1)) / 1024 / 1024}MB"
+                    BenchmarkingResult.get_mb_from_byte(int(decompressed_size_match.group(1)))
                 )
                 logger.info(
                     "File size before compression: "
@@ -89,7 +94,7 @@ class CPTExecutorElasticsearch(CPTExecutorBase):
                 logger.error("Cannot get decompressed metric")
             if compressed_size_match:
                 self.benchmarking_results[mode].compressed_size = (
-                    f"{int(compressed_size_match.group(1)) / 1024 / 1024}MB"
+                    BenchmarkingResult.get_mb_from_byte(int(compressed_size_match.group(1)))
                 )
                 logger.info(
                     "File size after compression: "

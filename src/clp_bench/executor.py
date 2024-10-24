@@ -50,6 +50,26 @@ class BenchmarkingResult:
     # Used for latency, unit: s
     TIME_PRECISION = 9
 
+    @staticmethod
+    def get_mb_from_byte(byte: int) -> str:
+        return f"{(byte / 1024 / 1024):.{BenchmarkingResult.SIZE_PRECISION}f} MB"
+
+    @staticmethod
+    def get_mb(mb: int) -> str:
+        return f"{mb}:.{BenchmarkingResult.SIZE_PRECISION} MB"
+
+    @staticmethod
+    def get_mb_from_kb(kb: int) -> str:
+        return f"{(kb / 1024):.{BenchmarkingResult.SIZE_PRECISION}f} MB"
+
+    @staticmethod
+    def get_mb_from_gb(gb: int) -> str:
+        return f"{(gb * 1024):.{BenchmarkingResult.SIZE_PRECISION}f} MB"
+
+    @staticmethod
+    def get_s_from_ns(ns: int) -> str:
+        return f"{(ns / 1e9):.{BenchmarkingResult.TIME_PRECISION}f} s"
+
     def __init__(
         self, mode: str, compressed_size="", decompressed_size="", ratio="", ingest_e2e_latency=""
     ):

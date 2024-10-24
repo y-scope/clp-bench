@@ -51,8 +51,8 @@ class CPTExecutorCLPG(CPTExecutorBase):
             decompressed_size_mb = (
                 int(result.stdout.decode("utf-8").split("\n")[-2].split()[0].strip()) / 1024 / 1024
             )
-            self.benchmarking_results[mode].decompressed_size = (
-                f"{decompressed_size_mb:.{BenchmarkingResult.SIZE_PRECISION}f}MB"
+            self.benchmarking_results[mode].decompressed_size = BenchmarkingResult.get_mb(
+                decompressed_size_mb
             )
             start_ts = time.perf_counter_ns()
             subprocess.run(
@@ -81,8 +81,8 @@ class CPTExecutorCLPG(CPTExecutorBase):
             compressed_size_mb = (
                 int(result.stdout.decode("utf-8").split("\n")[-2].split()[0].strip()) / 1024 / 1024
             )
-            self.benchmarking_results[mode].compressed_size = (
-                f"{compressed_size_mb:.{BenchmarkingResult.SIZE_PRECISION}f}MB"
+            self.benchmarking_results[mode].compressed_size = BenchmarkingResult.get_mb(
+                compressed_size_mb
             )
             self.benchmarking_results[mode].ratio = f"{decompressed_size_mb / compressed_size_mb}x"
         except subprocess.CalledProcessError as e:
