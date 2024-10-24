@@ -102,6 +102,7 @@ def main():
             "CLPJson",
             "CLPS",
             "Elasticsearch",
+            "MongoDB",
             "GrafanaLoki",
             "CLPG",
             "GLT",
