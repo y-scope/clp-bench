@@ -1,8 +1,8 @@
-import requests
 import json
 import os
-from dotenv import load_dotenv
 
+import requests
+from dotenv import load_dotenv
 
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 env_local_path = os.path.join(root_dir, ".env.local")

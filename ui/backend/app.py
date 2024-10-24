@@ -162,7 +162,7 @@ if __name__ == "__main__":
     base_path = os.getenv("VITE_FRONTEND_BASE_PATH", "")
     app = Flask(__name__, static_folder="../frontend/dist", static_url_path=f"{base_path}/")
     CORS(app)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI", "sqlite:///app.db")
     db.init_app(app)
     _define_routes(base_path)
     with app.app_context():
