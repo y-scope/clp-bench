@@ -2,9 +2,14 @@ import logging
 import subprocess
 import time
 
-from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
+from .executor import (
+    BenchmarkingMode,
+    BenchmarkingResult,
+    BenchmarkingSystemMetric,
+    CPTExecutorBase,
+)
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 
@@ -17,7 +22,7 @@ class CPTExecutorCLPS(CPTExecutorBase):
         super().__init__(config_path)
         # We read memory info directly from elasticsearch's API, there is no need to use baseline
         for mode in BenchmarkingMode:
-            self.benchmarking_reseults[mode].system_metric_results[
+            self.benchmarking_results[mode].system_metric_results[
                 BenchmarkingSystemMetric.MEMORY
             ].result_baseline = -1
 
@@ -52,25 +57,31 @@ class CPTExecutorCLPS(CPTExecutorBase):
             decompressed_size_mb = (
                 int(result.stdout.decode("utf-8").split("\n")[-2].split()[0].strip()) / 1024 / 1024
             )
-            self.benchmarking_reseults[mode].decompressed_size = f"{decompressed_size_mb:.2f}MB"
+            self.benchmarking_results[mode].decompressed_size = BenchmarkingResult.get_mb(
+                decompressed_size_mb
+            )
             start_ts = time.perf_counter_ns()
-            command = f"docker exec {container_id} {binary_path} c --timestamp-key 't.$date' --target-encoded-size 268435456 {data_path} {dataset_path}"
             subprocess.run(
-                command,
+                f"docker exec {container_id} {binary_path} c --timestamp-key 't.$date' "
+                f"--target-encoded-size 268435456 {data_path} {dataset_path}",
                 shell=True,
                 check=True,
             )
             end_ts = time.perf_counter_ns()
             elapsed_time = (end_ts - start_ts) / 1e9
-            self.benchmarking_reseults[mode].ingest_e2e_latency = f"{elapsed_time:.9f}s"
+            self.benchmarking_results[mode].ingest_e2e_latency = (
+                f"{elapsed_time:.{BenchmarkingResult.TIME_PRECISION}f}s"
+            )
             result = subprocess.run(
                 ["du", data_path, "-c", "-b"], stdout=subprocess.PIPE, check=True
             )
             compressed_size_mb = (
                 int(result.stdout.decode("utf-8").split("\n")[-2].split()[0].strip()) / 1024 / 1024
             )
-            self.benchmarking_reseults[mode].compressed_size = f"{compressed_size_mb:.2f}MB"
-            self.benchmarking_reseults[mode].ratio = f"{decompressed_size_mb / compressed_size_mb}x"
+            self.benchmarking_results[mode].compressed_size = BenchmarkingResult.get_mb(
+                compressed_size_mb
+            )
+            self.benchmarking_results[mode].ratio = f"{decompressed_size_mb / compressed_size_mb}x"
         except subprocess.CalledProcessError as e:
             raise Exception(f"clp-s failed to compress data: {e}")
 

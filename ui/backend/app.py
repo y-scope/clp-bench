@@ -1,11 +1,11 @@
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import UniqueConstraint, Row
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+import os
 
 from dotenv import load_dotenv
-import os
+from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import UniqueConstraint
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
@@ -162,7 +162,7 @@ if __name__ == "__main__":
     base_path = os.getenv("VITE_FRONTEND_BASE_PATH", "")
     app = Flask(__name__, static_folder="../frontend/dist", static_url_path=f"{base_path}/")
     CORS(app)
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///app.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI", "sqlite:///app.db")
     db.init_app(app)
     _define_routes(base_path)
     with app.app_context():

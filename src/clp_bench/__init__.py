@@ -4,7 +4,7 @@ import logging
 import traceback
 
 from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
-from .version import VERSION, VERSION_SHORT
+from .version import VERSION
 
 # Setup logging
 # Create logger
@@ -77,7 +77,7 @@ def query_only_run_benchmark(executor: CPTExecutorBase):
         executor.start_polling_system_metric(
             BenchmarkingSystemMetric.MEMORY, BenchmarkingMode.QUERY_ONLY_RUN_MODE
         )
-        # Query-only run mode no need to deploy, it assumes just finished a hot-run or cold-run benchmarking.
+        # Query-only run mode has no deployment, it assumes finished ingestion.
         executor.launch(BenchmarkingMode.QUERY_ONLY_RUN_MODE)
         executor.run_query_benchmark(BenchmarkingMode.QUERY_ONLY_RUN_MODE)
     except Exception as e:
@@ -89,25 +89,26 @@ def query_only_run_benchmark(executor: CPTExecutorBase):
 
 
 def main():
+    description = "CLP Bench--An out-of-the-box benchmarking framework."
+    unstructured_choices = [
+        "GrafanaLoki",
+        "CLPG",
+        "GLT",
+        "Grep",
+        "ElasticsearchUnstructured",
+    ]
+    semi_structured_choices = [
+        "CLPJson",
+        "CLPS",
+        "Elasticsearch",
+    ]
     # Command line arguments parsing
-    parser = argparse.ArgumentParser(
-        description="CLP Bench--An out-of-the-box benchmarking framework."
-    )
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
         "-t",
         "--target",
         type=str,
-        # The first line is for semi-structured; the second line is for unstructured
-        choices=[
-            "CLPJson",
-            "CLPS",
-            "Elasticsearch",
-            "GrafanaLoki",
-            "CLPG",
-            "GLT",
-            "Grep",
-            "ElasticsearchUnstructured",
-        ],
+        choices=unstructured_choices + semi_structured_choices,
         required=True,
         help="The target tool you want to benchmark",
     )
@@ -122,12 +123,13 @@ def main():
         default="all",
         help="The benchmarking mode",
     )
+    parser.add_argument("-v", "--version", action="version", version=f"{VERSION}")
     args = parser.parse_args()
     logger.info(f"Target tool is {args.target}")
     logger.info(f"The config file location: {args.config}")
     logger.info(f"The benchmarking mode: {args.mode}")
 
-    # Load cooresponding implementation for executor's SPI
+    # Load corresponding implementation for executor's SPI
     try:
         executor = load_executor_class(args.target, args.config)
     except Exception as e:

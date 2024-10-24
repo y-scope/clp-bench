@@ -9,7 +9,7 @@ from typing import Dict, List
 
 import yaml
 
-# Retrive logger
+# Retrieve logger
 logger = logging.getLogger(__name__)
 
 
@@ -44,6 +44,31 @@ class BenchmarkingResult:
     """
     Benchmarking result data structure, for visualization.
     """
+
+    # Used for file size and memory usage, unit: MB
+    SIZE_PRECISION = 2
+    # Used for latency, unit: s
+    TIME_PRECISION = 9
+
+    @staticmethod
+    def get_mb_from_byte(byte: int) -> str:
+        return f"{(byte / 1024 / 1024):.{BenchmarkingResult.SIZE_PRECISION}f} MB"
+
+    @staticmethod
+    def get_mb(mb: int) -> str:
+        return f"{mb}:.{BenchmarkingResult.SIZE_PRECISION} MB"
+
+    @staticmethod
+    def get_mb_from_kb(kb: int) -> str:
+        return f"{(kb / 1024):.{BenchmarkingResult.SIZE_PRECISION}f} MB"
+
+    @staticmethod
+    def get_mb_from_gb(gb: int) -> str:
+        return f"{(gb * 1024):.{BenchmarkingResult.SIZE_PRECISION}f} MB"
+
+    @staticmethod
+    def get_s_from_ns(ns: int) -> str:
+        return f"{(ns / 1e9):.{BenchmarkingResult.TIME_PRECISION}f} s"
 
     def __init__(
         self, mode: str, compressed_size="", decompressed_size="", ratio="", ingest_e2e_latency=""
@@ -87,9 +112,9 @@ class CPTExecutorBase(ABC):
             if self.config is None:
                 raise Exception("Unable to parse " + config_path)
         # Results for different modes
-        self.benchmarking_reseults: Dict[BenchmarkingMode, BenchmarkingResult] = {}
+        self.benchmarking_results: Dict[BenchmarkingMode, BenchmarkingResult] = {}
         for mode in BenchmarkingMode:
-            self.benchmarking_reseults[mode] = BenchmarkingResult(mode)
+            self.benchmarking_results[mode] = BenchmarkingResult(mode)
 
         self.__overall_threading_event = threading.Event()
 
@@ -129,11 +154,12 @@ class CPTExecutorBase(ABC):
                     f"Clearing existing stuff in {directory_path} in container {container_id}"
                 )
                 try:
-                    # Note to myself: when running the command manually in a shell, the wildcard (*) is expanded
-                    # by the shell to match files in the directory. However, when you run it through
-                    # `subprocess.run`, there is no shell involved by default, so the wildcard (*) isn’t expanded
-                    # and remains a literal *, which won’t work as expected. So the solution is to use `bash -c`
-                    # to enable wildcard expansion.
+                    # Note to myself: when running the command manually in a shell, the wildcard
+                    # (*) is expanded by the shell to match files in the directory. However, when
+                    # you run it through `subprocess.run`, there is no shell involved by default,
+                    # so the wildcard (*) isn’t expanded and remains a literal *, which won’t work
+                    # as expected. So the solution is to use `bash -c` to enable wildcard
+                    # expansion.
                     subprocess.run(
                         [
                             "docker",
@@ -146,7 +172,8 @@ class CPTExecutorBase(ABC):
                         check=True,
                     )
                     logger.info(
-                        f"All contents within {directory_path} cleared successfully in container {container_id}"
+                        f"All contents within {directory_path} cleared successfully in container "
+                        f"{container_id}"
                     )
                 except subprocess.CalledProcessError as e:
                     raise Exception(
@@ -191,7 +218,9 @@ class CPTExecutorBase(ABC):
         elapsed_time = (end_ts - start_ts) / 1e9
         nr_matched_log_lines = int(result.stdout.decode("utf-8").strip())
         logger.info(f"Number of matched log lines: {nr_matched_log_lines}")
-        self.benchmarking_reseults[mode].query_e2e_latencies.append(f"{elapsed_time:.9f}s")
+        self.benchmarking_results[mode].query_e2e_latencies.append(
+            f"{elapsed_time:.{BenchmarkingResult.TIME_PRECISION}f}s"
+        )
 
     def __set_thread_event_for_stage(self, stage: BenchmarkingStage):
         for it_stage in BenchmarkingStage:
@@ -242,24 +271,27 @@ class CPTExecutorBase(ABC):
         pass
 
     def visualize(self):
-        for mode, result in self.benchmarking_reseults.items():
+        for mode, result in self.benchmarking_results.items():
             if result.decompressed_size:
                 logger.info(
-                    f"{mode.value.capitalize()} mode: decompressed size {result.decompressed_size}"
+                    f"{mode.value.capitalize()} mode: decompressed size "
+                    f"{result.decompressed_size}"
                 )
             if result.compressed_size:
                 logger.info(
-                    f"{mode.value.capitalize()} mode: compressed size {result.compressed_size}"
+                    f"{mode.value.capitalize()} mode: " f"compressed size {result.compressed_size}"
                 )
             if result.ratio:
-                logger.info(f"{mode.value.capitalize()} mode: compression ratio {result.ratio}")
+                logger.info(f"{mode.value.capitalize()} mode: " f"compression ratio {result.ratio}")
             if result.ingest_e2e_latency:
                 logger.info(
-                    f"{mode.value.capitalize()} mode: ingest e2e latency {result.ingest_e2e_latency}"
+                    f"{mode.value.capitalize()} mode: ingest e2e latency "
+                    f"{result.ingest_e2e_latency}"
                 )
             for i in range(len(result.query_e2e_latencies)):
                 logger.info(
-                    f"{mode.value.capitalize()} mode: No.{i} query e2e latency {result.query_e2e_latencies[i]}"
+                    f"{mode.value.capitalize()} mode: No.{i} query e2e latency "
+                    f"{result.query_e2e_latencies[i]}"
                 )
 
             if self.config.get("system_metric", {}).get("enable", False):
@@ -289,7 +321,8 @@ class CPTExecutorBase(ABC):
                                     )
                                 )
                             logger.info(
-                                f"{mode.value.capitalize()} mode: average {metric.value[0]} usage at {stage.value} stage: {average_metric_result}{metric.value[1]}"
+                                f"{mode.value.capitalize()} mode: average {metric.value[0]} usage "
+                                f"at {stage.value} stage: {average_metric_result}{metric.value[1]}"
                             )
 
     def __load_system_metric_polling_config(self, metric: BenchmarkingSystemMetric):
@@ -301,7 +334,8 @@ class CPTExecutorBase(ABC):
             )
             self.__system_metric_pollers[metric].stage_polling_intervals[stage] = interval
             logger.info(
-                f"{metric.value[0].capitalize()} usage polling interval for {stage.value}: {interval} seconds"
+                f"{metric.value[0].capitalize()} usage polling interval for {stage.value}: "
+                f"{interval} seconds"
             )
 
     def __record_system_metric_polling_sample(
@@ -310,11 +344,12 @@ class CPTExecutorBase(ABC):
         for stage in BenchmarkingStage:
             if self.__system_metric_pollers[metric].stage_events[stage].is_set():
                 metric_sample = self._acquire_system_metric_sample(metric)
-                self.benchmarking_reseults[mode].system_metric_results[metric].stage_results[
+                self.benchmarking_results[mode].system_metric_results[metric].stage_results[
                     stage
                 ].append(metric_sample)
                 logger.info(
-                    f"Current {metric.value[0]} usage at {stage.value} stage: {metric_sample}{metric.value[1]}"
+                    f"Current {metric.value[0]} usage at {stage.value} stage: {metric_sample}"
+                    f"{metric.value[1]}"
                 )
                 self.__system_metric_pollers[metric].stage_alteration_notifier.wait(
                     self.__system_metric_pollers[metric].stage_polling_intervals[stage]
@@ -338,7 +373,7 @@ class CPTExecutorBase(ABC):
             metric_sample = 0
             # TODO
         else:
-            raise Exception(f"Unknow metric: {metric.value[0]}")
+            raise Exception(f"Unknown metric: {metric.value[0]}")
         return metric_sample
 
     def __poll_system_metrics(self, metric: BenchmarkingSystemMetric, mode: BenchmarkingMode):
@@ -352,9 +387,9 @@ class CPTExecutorBase(ABC):
             return
         if not self.__overall_threading_event.is_set():
             logger.info(f"Start polling {metric.value[0]} usage for mode {mode.value}")
-            if 0 == self.benchmarking_reseults[mode].system_metric_results[metric].result_baseline:
+            if 0 == self.benchmarking_results[mode].system_metric_results[metric].result_baseline:
                 metric_sample = self._acquire_system_metric_sample(metric)
-                self.benchmarking_reseults[mode].system_metric_results[
+                self.benchmarking_results[mode].system_metric_results[
                     metric
                 ].result_baseline = metric_sample
                 logger.info(f"Initial {metric.value[0]} usage: {metric_sample}{metric.value[1]}")
