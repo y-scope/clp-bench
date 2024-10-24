@@ -198,7 +198,7 @@ class CPTExecutorBase(ABC):
         elapsed_time = (end_ts - start_ts) / 1e9
         nr_matched_log_lines = int(result.stdout.decode("utf-8").strip())
         logger.info(f"Number of matched log lines: {nr_matched_log_lines}")
-        self.benchmarking_reseults[mode].query_e2e_latencies.append(
+        self.benchmarking_results[mode].query_e2e_latencies.append(
             f"{elapsed_time:.{BenchmarkingResult.TIME_PRECISION}f}s"
         )
 

@@ -3,7 +3,7 @@ import re
 import subprocess
 import time
 
-from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase
+from .executor import BenchmarkingMode, BenchmarkingSystemMetric, CPTExecutorBase, BenchmarkingResult
 
 # Retrieve logger
 logger = logging.getLogger(__name__)
@@ -61,21 +61,16 @@ class CPTExecutorCLPJson(CPTExecutorBase):
         dataset_path = self.config["clp_json"]["dataset_path"]
         try:
             start_ts = time.perf_counter_ns()
+            command = f"docker exec {container_id} {compress_script_path} --timestamp-key 't.$date' {dataset_path}"
             result = subprocess.run(
-                f"docker exec {container_id} {compress_script_path} --timestamp-key 't.$date' "
-                f"{dataset_path}",
-                stderr=subprocess.PIPE,
-                shell=True,
-                check=True,
-                text=True,
+                command, stderr=subprocess.PIPE, shell=True, check=True, text=True
             )
             end_ts = time.perf_counter_ns()
             elapsed_time = (end_ts - start_ts) / 1e9
             logger.info(
-                f"clp-json compressed data in {dataset_path} successfully in {elapsed_time:.9f} "
-                f"seconds"
+                f"clp-json compressed data in {dataset_path} successfully in {elapsed_time:.{BenchmarkingResult.TIME_PRECISION}f} seconds"
             )
-            self.benchmarking_results[mode].ingest_e2e_latency = f"{elapsed_time:.9f}s"
+            self.benchmarking_results[mode].ingest_e2e_latency = f"{elapsed_time:.{BenchmarkingResult.TIME_PRECISION}f}s"
             output = result.stderr
             match = re.search(r"Compressed (\S+).*?into (\S+).*?\((\d+\.\d+x)\)", output)
             if match:

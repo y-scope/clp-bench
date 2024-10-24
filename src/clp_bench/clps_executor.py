@@ -57,7 +57,7 @@ class CPTExecutorCLPS(CPTExecutorBase):
             decompressed_size_mb = (
                 int(result.stdout.decode("utf-8").split("\n")[-2].split()[0].strip()) / 1024 / 1024
             )
-            self.benchmarking_reseults[mode].decompressed_size = (
+            self.benchmarking_results[mode].decompressed_size = (
                 f"{decompressed_size_mb:.{BenchmarkingResult.SIZE_PRECISION}f}MB"
             )
             start_ts = time.perf_counter_ns()
@@ -69,7 +69,7 @@ class CPTExecutorCLPS(CPTExecutorBase):
             )
             end_ts = time.perf_counter_ns()
             elapsed_time = (end_ts - start_ts) / 1e9
-            self.benchmarking_reseults[mode].ingest_e2e_latency = (
+            self.benchmarking_results[mode].ingest_e2e_latency = (
                 f"{elapsed_time:.{BenchmarkingResult.TIME_PRECISION}f}s"
             )
             result = subprocess.run(
@@ -78,10 +78,10 @@ class CPTExecutorCLPS(CPTExecutorBase):
             compressed_size_mb = (
                 int(result.stdout.decode("utf-8").split("\n")[-2].split()[0].strip()) / 1024 / 1024
             )
-            self.benchmarking_reseults[mode].compressed_size = (
+            self.benchmarking_results[mode].compressed_size = (
                 f"{compressed_size_mb:.{BenchmarkingResult.SIZE_PRECISION}f}MB"
             )
-            self.benchmarking_reseults[mode].ratio = f"{decompressed_size_mb / compressed_size_mb}x"
+            self.benchmarking_results[mode].ratio = f"{decompressed_size_mb / compressed_size_mb}x"
         except subprocess.CalledProcessError as e:
             raise Exception(f"clp-s failed to compress data: {e}")
 

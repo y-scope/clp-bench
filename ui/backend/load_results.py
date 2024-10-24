@@ -19,7 +19,7 @@ print(url)
 
 # All current results
 results = [
-    # Unstructured with Hotrun
+    # Unstructured with hot run
     (
         ("clpg", "CLP & CLG", 1, False, 1, 1, 2871750, 6406600131, 21300206633, 971736351),
         (23670, 105240, 16200, 16630, 19000, 197160, 201620, 19260, 22590, 8160, 5660, 25080, 1840),
@@ -79,7 +79,7 @@ results = [
             394690,
         ),
     ),
-    # Unstructured with Coldrun
+    # Unstructured with cold run
     (
         ("clpg", "CLP & CLG", 1, False, 1, 2, 2871750, 6406600131, 21300206633, 5158612992),
         (26581, 112420, 18457, 18647, 20206, 198129, 202447, 20038, 24216, 8901, 6003, 26140, 1986),
@@ -139,7 +139,7 @@ results = [
             394690,
         ),
     ),
-    # Semi-structured with Hotrun
+    # Semi-structured with hot run
     (
         ("clps", "CLP-S", 1, True, 2, 1, 786770, 381346120, 466773606, 135224361),
         (1260, 28440, 1180, 1730, 1410, 1190),
@@ -163,7 +163,7 @@ results = [
         ),
         (2280, 9440, 490, 590, 2110, 1700),
     ),
-    # Semi-structured with Coldrun
+    # Semi-structured with cold run
     (
         ("clps", "CLP-S", 1, True, 2, 2, 786770, 381346120, 466773606, 164731290),
         (1300, 28560, 1170, 1700, 1420, 1210),

@@ -76,7 +76,7 @@ class CPTExecutorGrafanaLoki(CPTExecutorBase):
                 total_nr_matched_log_lines += int(result.stdout.decode("utf-8").strip())
                 current_time += interval
             logger.info(f"Number of matched log lines: {total_nr_matched_log_lines}")
-            self.benchmarking_reseults[mode].query_e2e_latencies.append(
+            self.benchmarking_results[mode].query_e2e_latencies.append(
                 f"{total_query_latency:.{BenchmarkingResult.TIME_PRECISION}f}s"
             )
 
