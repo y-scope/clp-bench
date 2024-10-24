@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from dateutil import parser
 
-from .executor import BenchmarkingMode, CPTExecutorBase
+from .executor import BenchmarkingMode, BenchmarkingResult, CPTExecutorBase
 
 # Retrieve logger
 logger = logging.getLogger(__name__)
@@ -29,8 +29,8 @@ class CPTExecutorGrafanaLoki(CPTExecutorBase):
         # You could query the current compression size by:
         # curl -G http://localhost:3100/metrics | grep 'loki_chunk_store_stored_chunk_bytes_total'
         # You could query the ingestion time by:
-        # curl -G http://localhost:3100/metrics | grep \
-        # 'loki_request_duration_seconds_sum{method="POST",route="loki_api_v1_push"'
+        # curl -G http://localhost:3100/metrics | \
+        # grep 'loki_request_duration_seconds_sum{method="POST",route="loki_api_v1_push"'
         pass
 
     def run_query_benchmark(self, mode: BenchmarkingMode):
@@ -76,8 +76,8 @@ class CPTExecutorGrafanaLoki(CPTExecutorBase):
                 total_nr_matched_log_lines += int(result.stdout.decode("utf-8").strip())
                 current_time += interval
             logger.info(f"Number of matched log lines: {total_nr_matched_log_lines}")
-            self.benchmarking_results[mode].query_e2e_latencies.append(
-                f"{total_query_latency:.9f}s"
+            self.benchmarking_reseults[mode].query_e2e_latencies.append(
+                f"{total_query_latency:.{BenchmarkingResult.TIME_PRECISION}f}s"
             )
 
     def launch(self, mode: BenchmarkingMode):

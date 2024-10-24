@@ -45,6 +45,11 @@ class BenchmarkingResult:
     Benchmarking result data structure, for visualization.
     """
 
+    # Used for file size and memory usage, unit: MB
+    SIZE_PRECISION = 2
+    # Used for latency, unit: s
+    TIME_PRECISION = 9
+
     def __init__(
         self, mode: str, compressed_size="", decompressed_size="", ratio="", ingest_e2e_latency=""
     ):
@@ -193,7 +198,9 @@ class CPTExecutorBase(ABC):
         elapsed_time = (end_ts - start_ts) / 1e9
         nr_matched_log_lines = int(result.stdout.decode("utf-8").strip())
         logger.info(f"Number of matched log lines: {nr_matched_log_lines}")
-        self.benchmarking_results[mode].query_e2e_latencies.append(f"{elapsed_time:.9f}s")
+        self.benchmarking_reseults[mode].query_e2e_latencies.append(
+            f"{elapsed_time:.{BenchmarkingResult.TIME_PRECISION}f}s"
+        )
 
     def __set_thread_event_for_stage(self, stage: BenchmarkingStage):
         for it_stage in BenchmarkingStage:
