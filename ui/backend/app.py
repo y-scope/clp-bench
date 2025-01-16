@@ -1,14 +1,17 @@
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import UniqueConstraint, Row
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+import os
+from typing import Tuple
 
 from dotenv import load_dotenv
-import os
+from flask import Flask, jsonify, request, Response
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import UniqueConstraint
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
+    """Required by SQLAlchemy"""
+
     pass
 
 
@@ -17,31 +20,56 @@ db = SQLAlchemy(model_class=Base)
 
 class BenchmarkingResult(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
+    """The ID of each result
+    """
     target: Mapped[str] = mapped_column(nullable=False)
+    """The short name of the tool to benchmark, which is also used by frontend to manage the results
+    """
     target_displayed_name: Mapped[str] = mapped_column(nullable=False)
+    """The name of the benchmarked tool which will be displayed in the UI
+    """
     displayed_order: Mapped[int] = mapped_column(nullable=False)
+    """The order of displayed results. The smaller the value is, the lefter the result (column) 
+    will be
+    """
     is_enable: Mapped[bool] = mapped_column(nullable=False)
-    # type-0: debug, type-1: unstructured, type-2: semi-structured
+    """A switch of result, typically should be True
+    """
     type: Mapped[int] = mapped_column(nullable=False)
-    # metric-0: debug, metric-1: hotrun, metric-2: coldrun
+    """The type of the results, type-0: debug, type-1: unstructured, type-2: dynamically-structured
+    """
     metric: Mapped[int] = mapped_column(nullable=False)
-    # Unit: ms
+    """The metric of the results, metric-0: debug, metric-1: hot run, metric-2: cold run
+    """
     ingest_time: Mapped[int] = mapped_column(nullable=True)
-    # Unit: byte
+    """The end-to-end latency of ingestion, the unit is millisecond
+    """
     compressed_size: Mapped[int] = mapped_column(nullable=True)
-    # Unit: byte
+    """The size of data after compression, the unit is byte
+    """
     avg_ingest_mem: Mapped[int] = mapped_column(nullable=True)
-    # Unit: byte
+    """The average memory usage during ingesting data, the unit is byte
+    """
     avg_query_mem: Mapped[int] = mapped_column(nullable=True)
-    # Unit: ms
+    """The average memory usage during executing queries, the unit is byte
+    """
     query_times: Mapped[str] = mapped_column(nullable=True)
+    """The end-to-end latencies of queries executed during benchmarking, the unit is millisecond
+    """
 
     __table_args__ = (UniqueConstraint("target", "type", "metric", name="uix_target_type_metric"),)
 
 
 def _define_routes(base_path: str):
+    """This function defines some routes of the Flask backend"""
+
     @app.route(f"{base_path}/api/post", methods=["POST"])
-    def add_result():
+    def add_result() -> Tuple[Response, int]:
+        """This function handles the post request, which deposit the benchmark results to the SQL
+        database
+
+        :return: The status of the request
+        """
         data = request.json
         new_benchmarking_result = BenchmarkingResult(
             target=data["target"],
@@ -106,12 +134,15 @@ def _define_routes(base_path: str):
         db.session.commit()
         return jsonify({"message": "success"}), 201
 
-    @app.route(f"{base_path}/")
-    def index():
-        return send_from_directory(app.static_folder, "index.html")
-
     @app.route(f"{base_path}/api/get", methods=["GET"])
-    def get_results():
+    def get_results() -> Tuple[Response, int]:
+        """This function handles the request of getting the benchmark results, which is sent by the
+        UI. There are three arguments can be passed in URL as the search key to get benchmark
+        results: target, type and metric
+
+        :return: The query results (typically it will return all results because UI does not append
+            any specified query arguments
+        """
         target = request.args.get("target")
         type = request.args.get("type")
         metric = request.args.get("metric")
@@ -159,14 +190,16 @@ if __name__ == "__main__":
     else:
         load_dotenv(env_path)
 
-    base_path = os.getenv("VITE_FRONTEND_BASE_PATH", "")
-    app = Flask(__name__, static_folder="../frontend/dist", static_url_path=f"{base_path}/")
+    vite_frontend_base_path = os.getenv("VITE_FRONTEND_BASE_PATH", "")
+    app = Flask(
+        __name__, static_folder="../frontend/dist", static_url_path=f"{vite_frontend_base_path}/"
+    )
     CORS(app)
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///app.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI", "sqlite:///app.db")
     db.init_app(app)
-    _define_routes(base_path)
+    _define_routes(vite_frontend_base_path)
     with app.app_context():
         db.create_all()
     app.run(
-        port=os.getenv("VITE_BACKEND_PORT", "127.0.0.1"), host=os.getenv("VITE_BACKEND_HOST", 5000)
+        host=os.getenv("VITE_BACKEND_HOST", "127.0.0.1"), port=os.getenv("VITE_BACKEND_PORT", 5000)
     )

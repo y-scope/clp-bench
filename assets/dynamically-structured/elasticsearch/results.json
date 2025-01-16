@@ -1,0 +1,36 @@
+{
+    "target": "elasticsearch",
+    "targetDisplayedName": "Elasticsearch",
+    "displayedOrder": 2,
+    "isEnable": true,
+    "type": 2,
+    "ingestTime": 19657020,
+    "compressedSize": 19141618565,
+    "avgIngestMem": 10376729068,
+    "metrics": [
+        {
+            "metric": 1,
+            "avgQueryMem": 5961930752,
+            "queryTimes": [
+                2280, 
+                9440, 
+                490, 
+                590, 
+                2110, 
+                1700
+            ]
+        },
+        {
+            "metric": 2,
+            "avgQueryMem": 6565423104,
+            "queryTimes": [
+                3050, 
+                9270, 
+                520, 
+                560, 
+                6000, 
+                1660
+            ]
+        }
+    ]
+}

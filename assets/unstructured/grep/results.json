@@ -1,0 +1,50 @@
+{
+    "target": "grep",
+    "targetDisplayedName": "grep",
+    "displayedOrder": 999,
+    "isEnable": true,
+    "type": 1,
+    "ingestTime": 0,
+    "compressedSize": 0,
+    "avgIngestMem": 0,
+    "metrics": [
+        {
+            "metric": 1,
+            "avgQueryMem": 0,
+            "queryTimes": [
+                494670,
+                514690,
+                403070,
+                373030,
+                540660,
+                666190,
+                604870,
+                640610,
+                798320,
+                443490,
+                839100,
+                670170,
+                394690
+            ]
+        },
+        {
+            "metric": 2,
+            "avgQueryMem": 0,
+            "queryTimes": [
+                494670,
+                514690,
+                403070,
+                373030,
+                540660,
+                666190,
+                604870,
+                640610,
+                798320,
+                443490,
+                839100,
+                670170,
+                394690
+            ]
+        }
+    ]
+}

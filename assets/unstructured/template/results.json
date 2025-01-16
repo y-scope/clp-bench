@@ -1,0 +1,50 @@
+{
+    "target": "yourTool",
+    "targetDisplayedName": "Your Tool Name",
+    "displayedOrder": 1,
+    "isEnable": true,
+    "type": 1,
+    "ingestTime": 999,
+    "compressedSize": 999,
+    "avgIngestMem": 999,
+    "metrics": [
+        {
+            "metric": 1,
+            "avgQueryMem": 999,
+            "queryTimes": [
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999
+            ]
+        },
+        {
+            "metric": 2,
+            "avgQueryMem": 999,
+            "queryTimes": [
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999,
+                999
+            ]
+        }
+    ]
+}

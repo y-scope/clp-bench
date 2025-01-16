@@ -1,0 +1,50 @@
+{
+    "target": "glt",
+    "targetDisplayedName": "CLP",
+    "displayedOrder": 1,
+    "isEnable": true,
+    "type": 1,
+    "ingestTime": 3161250,
+    "compressedSize": 3758274642,
+    "avgIngestMem": 1486115308,
+    "metrics": [
+        {
+            "metric": 1,
+            "avgQueryMem": 1712198779,
+            "queryTimes": [
+                2620, 
+                2400, 
+                2690, 
+                3280, 
+                2260, 
+                55270, 
+                54100, 
+                2330, 
+                4590, 
+                5250, 
+                4610, 
+                4150, 
+                1870
+            ]
+        },
+        {
+            "metric": 2,
+            "avgQueryMem": 1149728768,
+            "queryTimes": [
+                2844, 
+                2576, 
+                2728, 
+                3359, 
+                2434, 
+                55033, 
+                57339, 
+                2715, 
+                4795, 
+                5934, 
+                5364, 
+                4656, 
+                2016
+            ]
+        }
+    ]
+}

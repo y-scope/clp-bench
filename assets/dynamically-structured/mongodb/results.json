@@ -1,0 +1,36 @@
+{
+    "target": "mongodb",
+    "targetDisplayedName": "MongoDB",
+    "displayedOrder": 4,
+    "isEnable": true,
+    "type": 2,
+    "ingestTime": 14067665,
+    "compressedSize": 4697899008,
+    "avgIngestMem": 2394053632,
+    "metrics": [
+        {
+            "metric": 1,
+            "avgQueryMem": 49888236544,
+            "queryTimes": [
+                140598, 
+                140027, 
+                140363, 
+                195352, 
+                128771, 
+                142634
+            ]
+        },
+        {
+            "metric": 2,
+            "avgQueryMem": 46862787584,
+            "queryTimes": [
+                184740, 
+                136416, 
+                146571, 
+                203285, 
+                137266, 
+                151620
+            ]
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+{
+    "target": "clickhouse",
+    "targetDisplayedName": "ClickHouse",
+    "displayedOrder": 3,
+    "isEnable": true,
+    "type": 2,
+    "ingestTime": 636409,
+    "compressedSize": 1050348093,
+    "avgIngestMem": 39008949248,
+    "metrics": [
+        {
+            "metric": 1,
+            "avgQueryMem": 707801088,
+            "queryTimes": [
+                189293, 
+                117725, 
+                199560, 
+                226136, 
+                221677, 
+                219761
+            ]
+        },
+        {
+            "metric": 2,
+            "avgQueryMem": 603047936,
+            "queryTimes": [
+                189381, 
+                115290, 
+                198320, 
+                225983, 
+                227425, 
+                224492
+            ]
+        }
+    ]
+}

@@ -219,14 +219,15 @@ const ColoredCell = ({ params, type, metric }: { params: GridCellParams, type: s
     let textColor = 'black';
 
     if (0 != currentValue) {
-        const minValue = Math.min(...nonEmptyValues);
-        const maxValue = Math.max(...nonEmptyValues);
-        
+        const logMinValue = Math.log(Math.min(...nonEmptyValues));
+        const logMaxValue = Math.log(Math.max(...nonEmptyValues));
+        const logCurrentValue = Math.log(currentValue);
+
         // The color changes from green (0, 255, 0) to yellow (255, 255, 0) to red (255, 0, 0) to dark (0, 0, 0).
         // So there are three stages.
 
-        const ratio = reverse ? (maxValue - currentValue) / (maxValue - minValue)
-                            : (currentValue - minValue) / (maxValue - minValue);
+        const ratio = reverse ? (logMaxValue - logCurrentValue) / (logMaxValue - logMinValue)
+                            : (logCurrentValue - logMinValue) / (logMaxValue - logMinValue);
         if (0.3333 > ratio) {
             // Change from green (0, 255, 0) to yellow (255, 255, 0)
             redValue = 255 * ratio / 0.3333;
@@ -236,8 +237,8 @@ const ColoredCell = ({ params, type, metric }: { params: GridCellParams, type: s
             redValue = 255;
             greenValue = 255 * (1 - (ratio - 0.3333) / 0.3333);
         } else {
-            // Change from red to dark (255, 0, 0) to dark (0, 0, 0)
-            redValue = 255 * (1 - (ratio - 0.6666) / 0.3333);
+            // Change from red to dark (255, 0, 0) to dark red (128, 0, 0)
+            redValue = 64 + 192 * (1 - (ratio - 0.6666) / 0.3333);
             greenValue = 0
         }
     
