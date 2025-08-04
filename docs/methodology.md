@@ -552,13 +552,13 @@ For memory monitoring, similar to CLP and CLP-S, `clp-bench` uses `ps aux` and c
 field.
 
 [CLP]: https://github.com/y-scope/clp
-[clp-s]: https://docs.yscope.com/clp/main/user-guide/core-clp-s.html
-[core-build]: https://docs.yscope.com/clp/main/dev-guide/components-core/index.html
-[glt]: https://docs.yscope.com/clp/main/user-guide/core-unstructured/glt.html
+[clp-s]: https://docs.yscope.com/clp/main/user-docs/core-clp-s.html
+[core-build]: https://docs.yscope.com/clp/main/dev-docs/components-core/index.html
+[glt]: https://docs.yscope.com/clp/main/user-docs/core-unstructured/glt.html
 [disabling-xpack]: https://www.elastic.co/guide/en/elasticsearch/reference/current/security-settings.html
 [Elasticsearch]: https://www.elastic.co/downloads/elasticsearch
 [hadoop-14TB]: https://zenodo.org/records/7114847
-[KQL]: https://docs.yscope.com/clp/main/user-guide/reference-json-search-syntax.html
+[KQL]: https://docs.yscope.com/clp/main/user-docs/reference-json-search-syntax.html
 [LogCLI]: https://grafana.com/docs/loki/latest/query/logcli/
 [loki-config]: https://grafana.com/docs/loki/latest/configure/
 [Loki]: https://grafana.com/oss/loki/
